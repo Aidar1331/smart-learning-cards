@@ -30,7 +30,7 @@ export const CreateCards: React.FC<CreateCardsProps> = ({ onCardsCreated, onClos
     success: false
   });
 
-  const { hapticFeedback, mainButton } = useTelegram();
+  const { hapticFeedback } = useTelegram();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];

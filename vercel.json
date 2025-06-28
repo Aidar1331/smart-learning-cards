@@ -1,4 +1,8 @@
 {
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "framework": null,
+  "installCommand": "echo 'Skipping install'",
   "functions": {
     "backend/api/*.ts": {
       "maxDuration": 30,

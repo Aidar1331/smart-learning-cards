@@ -6,13 +6,12 @@ import {
   Eye, 
   Target, 
   RotateCcw, 
-  BarChart3, 
   BookOpen, 
   TrendingUp,
   Calendar,
   Zap
 } from 'lucide-react';
-import { FlashCard, StudySet } from '@/types/flashcard';
+import { FlashCard } from '@/types/flashcard';
 import { TelegramUser } from '@/types/telegram';
 import { SpacedRepetitionEngine } from '@/utils/superMemo';
 import { useTelegram } from '@/hooks/useTelegram';
@@ -25,7 +24,7 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ cards, user, onCreateCards }) => {
   const navigate = useNavigate();
-  const { hapticFeedback, mainButton } = useTelegram();
+  const { hapticFeedback } = useTelegram();
   const [sm2Engine] = useState(new SpacedRepetitionEngine());
 
   const stats = useMemo(() => {

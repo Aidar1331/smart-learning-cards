@@ -17,6 +17,8 @@ export interface TelegramWebApp {
   expand(): void;
   close(): void;
   sendData(data: string): void;
+  showAlert?(message: string): void;
+  showConfirm?(message: string, callback: (confirmed: boolean) => void): void;
   onEvent(eventType: string, eventHandler: () => void): void;
   offEvent(eventType: string, eventHandler: () => void): void;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { RotateCcw, CheckCircle, XCircle, HelpCircle, Volume2 } from 'lucide-react';
 import { FlashCard as FlashCardType } from '@/types/flashcard';
 import { useTelegram } from '@/hooks/useTelegram';

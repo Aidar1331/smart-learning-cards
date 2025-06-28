@@ -65,11 +65,6 @@ export const RepeatMode: React.FC<RepeatModeProps> = ({
     const sm2Result = sm2Engine.calculateNextReview(card, quality);
     
     // Update card with new SM-2 data
-    const updatedCard = {
-      ...card,
-      sm2Data: sm2Result
-    };
-    
     onUpdateCard(card.id, sm2Result);
     
     // Track quality scores
