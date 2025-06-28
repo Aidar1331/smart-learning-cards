@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="description" content="Smart flashcard learning app powered by AI for Telegram" />
+    
+    <!-- Telegram WebApp script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Apple touch icon -->
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    
+    <title>Smart Learning Cards</title>
+    
+    <style>
+      /* Prevent flash of unstyled content */
+      body {
+        visibility: hidden;
+        background-color: var(--tg-theme-bg-color, #ffffff);
+      }
+      
+      body.loaded {
+        visibility: visible;
+      }
+      
+      /* Loading screen */
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--tg-theme-bg-color, #ffffff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(59, 130, 246, 0.2);
+        border-left: 4px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <script>
+      // Initialize body class when loaded
+      window.addEventListener('load', function() {
+        document.body.classList.add('loaded');
+        
+        // Hide loading screen after React app loads
+        setTimeout(function() {
+          const loadingScreen = document.getElementById('loading-screen');
+          if (loadingScreen) {
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => loadingScreen.remove(), 300);
+          }
+        }, 500);
+      });
+      
+      // Apply Telegram theme immediately
+      if (window.Telegram?.WebApp) {
+        const tg = window.Telegram.WebApp;
+        
+        // Set CSS variables based on Telegram theme
+        if (tg.themeParams) {
+          const root = document.documentElement;
+          const theme = tg.themeParams;
+          
+          if (theme.bg_color) root.style.setProperty('--tg-theme-bg-color', theme.bg_color);
+          if (theme.text_color) root.style.setProperty('--tg-theme-text-color', theme.text_color);
+          if (theme.hint_color) root.style.setProperty('--tg-theme-hint-color', theme.hint_color);
+          if (theme.link_color) root.style.setProperty('--tg-theme-link-color', theme.link_color);
+          if (theme.button_color) root.style.setProperty('--tg-theme-button-color', theme.button_color);
+          if (theme.button_text_color) root.style.setProperty('--tg-theme-button-text-color', theme.button_text_color);
+          if (theme.secondary_bg_color) root.style.setProperty('--tg-theme-secondary-bg-color', theme.secondary_bg_color);
+        }
+        
+        // Apply dark class if needed
+        if (tg.colorScheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+        
+        // Set viewport height
+        if (tg.viewportHeight) {
+          document.documentElement.style.setProperty('--tg-viewport-height', tg.viewportHeight + 'px');
+        }
+        
+        // Disable vertical scroll bounce on iOS
+        document.addEventListener('touchmove', function(e) {
+          if (e.scale !== 1) { e.preventDefault(); }
+        }, { passive: false });
+      }
+      
+      // Service Worker registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

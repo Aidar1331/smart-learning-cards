@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "builds": [
+    { 
+      "src": "frontend/package.json", 
+      "use": "@vercel/static-build",
+      "config": { 
+        "distDir": "dist",
+        "buildCommand": "npm run build"
+      }
+    },
+    { 
+      "src": "backend/api/*.ts", 
+      "use": "@vercel/node" 
+    }
+  ],
+  "routes": [
+    { 
+      "src": "/api/(.*)", 
+      "dest": "/backend/api/$1" 
+    },
+    { 
+      "src": "/(.*)", 
+      "dest": "/frontend/$1" 
+    }
+  ],
+  "env": {
+    "CLAUDE_API_KEY": "@claude-api-key",
+    "REDIS_URL": "@redis-url",
+    "TELEGRAM_BOT_TOKEN": "@telegram-bot-token"
+  },
+  "functions": {
+    "backend/api/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
+    }
+  ]
+}
